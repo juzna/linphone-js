@@ -1,0 +1,57 @@
+Linphone JS
+- start(options)
+- firewallDisable()
+- firewallStun(server)
+- enableLogs(path)
+- enableLogsEvent() - fire event on log message
+- disableLogs()
+- $started -> bool
+- $iterations -> int; numeber of iterate_thread interations
+- $generalState -> int; $generalStateText
+- $hookState -> int
+- $hookStateText -> string
+- $caller
+- $callee
+- $havingCall
+- $havingIncomingCall
+- $havingOutgoingCall
+- $proxyList -> [ ProxyAPI ]
+- $authList -> [ AuthAPI ]
+- $soundCardList -> [ string ]
+- $soundCard{Ringer, Playback, Capture} -> string (can be used to set)
+- $duration - duration of last call
+- $codecList -> []
+- codecEnable()
+- codecDisable()
+
+
+Events:
+ - refer recv
+ - terminated -> add duration
+
+
+
+Options for start():
+- configFile
+- factoryConfigFile
+- stun
+- username, realm, password
+- proxy
+
+
+- throw errors when linphone not started()
+
+
+ProxyAPI:
+ - unregister()
+ - register()
+ - default() - make default
+ - delete()
+ - add() - attach
+ - $proxy, $identity, $registerEnabled?, $expires, $registered?
+
+
+AuthAPI:
+ - $user, $realm, $pass
+ - add()
+ - delete()
