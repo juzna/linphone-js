@@ -1,0 +1,32 @@
+JavaScript API
+
+methods:
+ start() - start linphone core
+ quit() - quit
+ addAuthInfo(username, realm, password)
+ addProxy(identity, proxy-url)
+ register(identity, proxy, password) - try to register to a proxy
+ accept() - accepts incoming call
+ terminate() - terminate call
+ call(sip uri) - make new call
+ refer(sip uri) - refer call to someone else
+ getHookState() -> int, get hook state as integer, you can parse it bit per bit
+
+
+properties:
+ autoAnswer = false	- answer automatically
+ captureVideo = false	- allow video capturing in video calls
+ showVideo = false	- show video window when video call
+
+
+events:
+ onAuthInfoRequested(realm, username) - fired when registration needs auth data.
+ onMessage(string msg)
+ onStatus(string msg)
+ onWarning(string msg)
+ onURL(string msg, url)
+ onCall(string caller)
+ onHangUp(string caller)
+ onDTMF(int code)
+ onStateChange(int newState, string msg)
+ onLog(level, msg)

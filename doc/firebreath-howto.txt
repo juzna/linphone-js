@@ -1,0 +1,15 @@
+fbgen questions?
+ - prepare list of properties, methods and events first and fbgen will prepare 'em
+ - how to add include path for gcc?
+ - how to add statically linked library?
+ - add install target - copy *.so to firefox dir
+
+./fbgen.py
+update files
+prepmake.sh
+compile linphone with -fPIC
+edit CMakeFiles/test1.dir/flags.make, link.txt
+make in build/
+
+
+linphone libraries: ../coreapi/liblinphone.la ../mediastreamer2/src/libmediastreamer.la ../oRTP/src/libortp.la -lspeex -losipparser2 -losip2  

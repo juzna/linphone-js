@@ -1,0 +1,87 @@
+linhpone how to get registered to a proxy
+
+1/ create auth_info
+2/ fill it - at least username, password and realm can be used too but not necessary.
+3/ add_auth_info - add it to lcore (than you can destroy it by auth_info_destroy)
+
+4/ get proxy config list
+5/ find proxy config that you want, or create new proxy config if none exists (if you're editing proxy, mark is as 'in use' by proxy_config_edit)
+6/ update proxy config parameters (ser identity and proxy, and optionally realm)
+7/ enable registering on this proxy
+8/ unmark 'in-use' by proxy_config_done (if editing old config) or add it to lcore by add_proxy_config
+
+9/ optionally, set is as default config (for outgoing calls)
+
+10/ wait, if all ok, you'll get registered
+    otherwise
+    a/ you can abort it by linphone_core_abort_authentication
+    b/ auth_info_requested callback will be called (with username and realm as params)
+    c/ create new auth info, fill it with username, realm and password
+    d/ add it to lcore
+    e/ if ok, you'll get registered
+
+
+
+
+how to answer call
+1/ inv_recv event is invoked (with caller as argument)
+2/ call linphone_core_accept_call. You can use caller as second argument, of just let it NULL to answer the unique incoming call
+3/ or you can terminate it by linphone_core_terminate_call (again with or without caller name)
+4/ when the call is terminated, bye_recv event is fired
+
+
+
+how to start new call out:
+1/ ivite other side by linphone_core_invite(uri)
+
+
+refer call:
+1/ linphone_core_refer(new destination)
+
+
+
+how to quit:
+1/ terminate call (never mind if there's no call present at the time)
+2/ destroy it by linphone_core_destroy
+
+
+
+how to initialize:
+1/ prepare VTable
+2/ create lcore with linphone_core_new
+3/ prepare thread, which will call core_iterate() periodically (with sleep about 20ms; gotta be thread safe)
+
+
+how to traverse nat:
+1/ set stun server with linphone_core_set_stun_server(servername)
+!!! FIND MORE INFO
+
+
+how to record or play wavs
+....
+
+
+
+how to unregister
+1/ get config by linphone_core_get_default_proxy
+2/ check, whether it's registered
+3/ mark cfg as editing
+4/ unset register flag
+5/ store proxy config
+
+
+how to get hook state:
+1/ call linphone_core_get_state
+2/ parse it bit per bit
+3/ register state - for each config get linphone_proxy_config_is_registered
+
+
+how to enable or disable video
+1/ linphone_core_enable_video(linphonec,vcap_enabled,display_enabled);
+
+
+how to work with logs
+1/ to enable logs to file, call linphone_core_enable_logs(FILE *)
+2/ to enable logs to std out, use null as argument
+3/ to disable logs completely, call linphone_core_disable_logs()
+4/ when you want to process logs using callback function, define cb(level, format, args) and call linphone_core_enable_logs_with_cb(cb)
