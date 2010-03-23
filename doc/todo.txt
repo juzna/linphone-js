@@ -27,7 +27,9 @@ Linphone JS
 
 Events:
  - refer recv
- - terminated -> add duration
+ - terminated -> add duration, also when we terminate call
+ - stateChange(int, string)
+ - newCall - on incoming and outgoing call also
 
 
 Options for start():
@@ -36,6 +38,7 @@ Options for start():
 - stun
 - username, realm, password
 - proxy
+- showVideo, captureVideo, showVideoPreview
 
 
 - throw errors when linphone not started()
