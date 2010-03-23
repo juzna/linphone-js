@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
+</head>
+<body onload="init();">
+
+<object type="application/x-linphone" id="linphonePlugin" width="0" height="0"> </object>
+
+<form id="frmLinphoneSetup">
+<strong>Setup</strong><br />
+  Username: <input type="text" name="username" /> (johndoe)<br />
+  Password: <input type="password" name="pass" /><br />
+  Proxy server: <input type="text" name="proxy" /> (sip.provider.com)<br />
+  <input type="button" onclick="voipStart();" value="Start" />
+</form>
+
+<form id="frmLinphone">
+ <p>
+  Callee: <input type="text" name="callee" />
+  <input type="button" onclick="window.voip.call(this.form.callee.value);" value="Call" />
+ </p>
+ <p id="callInfo" >
+  <strong>Call info</strong><br />
+  <span id="what"></span>
+  <input type="button" />
+  <input type="button" value="Terminate" onclick="window.voip.terminate();"/>
+ </p>
+
+
+</form>
+
+
+<script language="javascript">
+function init() {
+if(window.voip) return;
+var voip = window.voip = $('linphonePlugin');
+
+window.voipStart = function() {
+ var frm = $('frmLinphoneSetup');
+ 
+  // Initialize linphone
+  voip.start();
+  voip.addAuthInfo(frm.username.value, '', frm.pass.value);
+  voip.addProxy('sip:' + frm.proxy.value, 'sip:' + frm.username.value + '@' + frm.proxy.value);
+  
+  frm.hide();
+};
+ 
+
+// Define event handlers
+var eventHandlers = {
+  AuthInfoRequested: function(realm, username) {
+    console.log('Auth info required for', username, 'on', realm);
+  },
+  
+  // New call
+  Call: function(caller, autoAnswerEnabled) {
+    console.log("new call from", caller);
+    
+    $('callInfo').down('span').update("New incoming call from " + caller);
+    with($('callInfo').down('input')) {
+      value = 'Accept';
+      onclick = function() { window.voip.accept(); }
+    }
+  },
+  
+  // Message received
+  Message: function(frm, msg) {
+    console.log("new message from", from, ":", msg);
+  },
+  
+  HangUp: function(caller) {
+    console.log("terminate call from", caller);
+  },
+  
+  Status: function(msg) {
+    console.log("linpgone status:", msg);
+  },
+  Warning: function(msg) {
+    console.log("linpgone warning:", msg);
+  },
+  StateChange: function(state) {
+    console.log("new linphone state", state);
+  },
+};
+
+// Add event listeners
+for(var i in eventHandlers) voip.addEventListener(i, eventHandlers[i], false);
+}
+
+</script>
+
+</body>
+</html>
