@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
+<script type="text/javascript">
+
+function log1(x) {
+  var el = document.getElementById('log');
+  var li = document.createElement('li');
+  li.innerHTML = dump(x);
+  el.appendChild(li);
+}
+function log2(x) { console.log(x); }
+
+var log = console && console.log ? log2 : log1;
+
+function dump(x) {
+ if(uneval) return uneval(x);
+ else return dump2(x);
+}
+
+function dump2(x) { return x; }
+
+
+function init() {
+  var plugin = window.pl = document.getElementById("plugin");
+  
+  // Set callback
+  function setCb(name, what) {
+    plugin.addEventListener(name, what, false); 
+  }
+  
+  var evs = ['AuthInfoRequested', 'Message', 'Status', 'Warning', 'URL', 'Call', 'HangUp', 'DTMF', 'StateChange', 'Log', 'ProxyAdded'];
+  for(var i = 0; i < evs.length; ++i) setCb(evs[i], (function() { try { log(arguments); } catch(e) { } }).bind(evs[i]));
+  
+  log('Start', plugin.start());
+}
+
+// Add auth info
+function setAuthInfo() {
+ var frm = $('frmAuth');
+ log(window.pl.addAuthInfo(frm.username.value, frm.realm.value, frm.pass.value));
+}
+
+function addProxy() {
+ var frm = $('frmProxy');
+ log(window.pl.addProxy(frm.proxy.value, frm.identity.value));
+}
+
+function makeCall() {
+ log(window.pl.call($('frmCall').callee.value));
+}
+
+</script>
+</head>
+
+<body onload="init()">
+<object type="application/x-linphone" id="plugin" width="0" height="0"> </object>
+
+<p><strong>Howto</strong>
+<ul>
+ <li>Start linphone core</li>
+ <li>Add auth info</li>
+ <li>add proxy</li>
+ <li>You can make call</li>
+ </ul></p>
+
+<button onclick="window.pl.start()">Start</button>
+<button onclick="window.pl.quit()">Quit</button>
+<button onclick="window.pl.accept()">Accept call</button>
+<button onclick="window.pl.terminate()">Terminate call</button><br />
+
+<form id="frmAuth">
+ <b>Set auth info</b><br />
+  Username: <input type="text" name="username" /> (johndoe)<br />
+  Realm: <input type="text" name="realm" /> (you can leave it empty)<br />
+  Password: <input type="password" name="pass" /><br />
+  <input type="button" onclick="setAuthInfo();" value="Set auth info" />
+</form>
+
+<form id="frmProxy">
+ <b>Add proxy</b><br />
+  Identity: <input type="text" name="identity" /> (sip:name@server.com)<br />
+  Proxy server: <input type="text" name="proxy" /> (sip:provider.com)<br />
+  <input type="button" onclick="addProxy();" value="Add proxy" />
+</form>
+ 
+<form id="frmCall">
+ Callee: <input type="text" name="callee" />
+ <input type="button" onclick="makeCall();" value="Call" />
+</form>
+
+<button onclick="log(window.pl.refer('774178544'))">Refer</button><br />
+<button onclick="log(window.pl.getHookState())">Get state</button><br />
+<button onclick="log(window.pl.registered)">Registered?</button><br />
+
+<ul id="log"></ul>
+
+</body>
+</html>

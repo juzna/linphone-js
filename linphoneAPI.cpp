@@ -13,8 +13,8 @@ static void * instance = NULL;
 #include "linphoneAPI.h"
 
 // Global callbacks which wraps linphoneAPI object methods
-// #define GLC printf("x %u %u\n", lc, linphone_core_get_user_data(lc)); if(!linphone_core_get_user_data(lc)) printf("not found linphone api\n"); else ((linphoneAPI*) linphone_core_get_user_data(lc))
-#define GLC ((linphoneAPI*) instance)
+#define GLC if(!linphone_core_get_user_data(lc)) printf("not found linphone api\n"); else ((linphoneAPI*) linphone_core_get_user_data(lc))
+// #define GLC ((linphoneAPI*) instance)
 static void cb_lcb_call_received(LinphoneCore *lc, const char *from) { GLC->lcb_call_received(lc, from); }
 static void cb_lcb_bye_received(LinphoneCore *lc, const char *from) { GLC->lcb_bye_received(lc, from); }
 static void cb_lcb_notify_received(LinphoneCore *lc, LinphoneFriend *fid, const char *url, const char *status, const char *img) { GLC->lcb_notify_received(lc, fid, url, status, img); }
@@ -89,6 +89,7 @@ bool linphoneAPI::call_start(void) {
     Lock lck(&mutex, NULL);
     
     // Initialize callback table
+    memset(&lin_vtable, 0, sizeof(LinphoneCoreVTable));
     lin_vtable.show 			= (ShowInterfaceCb) stub;
     lin_vtable.inv_recv 		= mcb(lcb_call_received);
     lin_vtable.bye_recv 		= mcb(lcb_bye_received);
@@ -100,9 +101,12 @@ bool linphoneAPI::call_start(void) {
     lin_vtable.display_warning		= mcb(lcb_display_warning);
     lin_vtable.display_url		= mcb(lcb_display_url);
     lin_vtable.display_question		= (DisplayQuestionCb) stub;
+    lin_vtable.call_log_updated		= (CallLogUpdated) stub;
     lin_vtable.text_received		= mcb(lcb_text_received);
     lin_vtable.general_state		= mcb(lcb_general_state);
     lin_vtable.dtmf_received		= mcb(lcb_dtmf_received);
+    lin_vtable.refer_received		= (ReferReceived) stub;
+    lin_vtable.buddy_info_updated	= (BuddyInfoUpdated) stub;
     
     char configfile_name[PATH_MAX];
     snprintf(configfile_name, PATH_MAX, "%s/.linphonerc", getenv("HOME"));
@@ -110,8 +114,10 @@ bool linphoneAPI::call_start(void) {
     // Create linphone core
     instance = this;
     lin = linphone_core_new(&lin_vtable, NULL, NULL, (void *) this);
-    printf("linphone initialized, %u %u, %u\n", (void *)this, linphone_core_get_user_data(lin), lin->data);
-    
+    if(linphone_core_get_user_data(lin) != this) {
+      printf("you have old version of linphone core\n");
+      return false;
+    }
     
     // Disable/enable logs
     linphone_core_disable_logs();
@@ -162,6 +168,7 @@ bool linphoneAPI::call_quit(void) {
   
   // Destroy linphone core
   linphone_core_destroy(lin);
+  lin = NULL;
   
   return true;
 }

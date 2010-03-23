@@ -30,7 +30,6 @@ Events:
  - terminated -> add duration
 
 
-
 Options for start():
 - configFile
 - factoryConfigFile
