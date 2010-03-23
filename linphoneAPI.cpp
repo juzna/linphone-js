@@ -126,6 +126,8 @@ bool linphoneAPI::call_start(void) {
     linphone_core_set_firewall_policy(lin, LINPHONE_POLICY_USE_STUN);
     linphone_core_set_stun_server(lin, "stun.helemik.cz");
     
+    linphone_core_enable_video(lin, false, false);
+    
     // Initialize iterating thread
     iterate_thread_running = true;
     ortp_thread_create(&iterate_thread,NULL, iterate_thread_main, this);
