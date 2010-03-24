@@ -1,9 +1,3 @@
-[submodule "linphone"]
-	path = 3rdParty/linphone/
+[submodule "3rdParty/linphone"]
+	path = 3rdParty/linphone
 	url = git://git.sv.gnu.org/linphone.git
-[submodule "oRTP"]
-	path = 3rdParty/linphone/oRTP
-	url = git://git.linphone.org/ortp.git
-[submodule "mediastreamer2"]
-	path = 3rdParty/linphone/mediastreamer2
-	url = git://git.linphone.org/mediastreamer2.git
