@@ -5,16 +5,18 @@ Linphone JS
 - enableLogs(path)
 - enableLogsEvent() - fire event on log message
 - disableLogs()
+- register(username, pass, proxy): addAuthInfo and addProxy
 - $started -> bool
 - $iterations -> int; numeber of iterate_thread interations
-- $generalState -> int; $generalStateText
+- $generalState -> int
+- $generalStateText -> string
 - $hookState -> int
 - $hookStateText -> string
-- $caller
-- $callee
-- $havingCall
-- $havingIncomingCall
-- $havingOutgoingCall
+- $caller -> string
+- $callee -> string
+- $havingCall -> bool
+- $havingIncomingCall -> bool
+- $havingOutgoingCall -> bool
 - $proxyList -> [ ProxyAPI ]
 - $authList -> [ AuthAPI ]
 - $soundCardList -> [ string ]
@@ -30,14 +32,15 @@ Events:
  - terminated -> add duration, also when we terminate call
  - stateChange(int, string)
  - newCall - on incoming and outgoing call also
+ - missedCall
+ - calleeNotReachable
 
 
 Options for start():
 - configFile
 - factoryConfigFile
 - stun
-- username, realm, password
-- proxy
+- username, realm, password, proxy - for registration
 - showVideo, captureVideo, showVideoPreview
 
 
@@ -57,3 +60,8 @@ AuthAPI:
  - $user, $realm, $pass
  - add()
  - delete()
+
+
+
+Misc activities:
+- discover possibilities of multiple calls in linphone
