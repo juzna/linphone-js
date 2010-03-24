@@ -18,6 +18,11 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     *.cmake
     )
 
+SET(CORE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/linphone/")
+INCLUDE_DIRECTORIES(${CORE_PATH}/oRTP/include ${CORE_PATH}/mediastreamer2/include ${CORE_PATH}/coreapi ${CORE_PATH}/)
+SET(PLUGIN_INTERNAL_DEPS ${PLUGIN_INTERNAL_DEPS} ${CORE_PATH}/coreapi/.libs/liblinphone.so ${CORE_PATH}/mediastreamer2/src/.libs/libmediastreamer.so ${CORE_PATH}/oRTP/src/.libs/libortp.so -lspeex -losipparser2 -losip2)
+
+
 # Generated files are stored in ${GENERATED} by the project configuration
 SET_SOURCE_FILES_PROPERTIES(
     ${GENERATED}
