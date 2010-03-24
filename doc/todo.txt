@@ -44,9 +44,6 @@ Options for start():
 - showVideo, captureVideo, showVideoPreview
 
 
-- throw errors when linphone not started()
-
-
 ProxyAPI:
  - unregister()
  - register()
@@ -65,3 +62,5 @@ AuthAPI:
 
 Misc activities:
 - discover possibilities of multiple calls in linphone
+- throw errors when linphone not started()
+- catch for JavaScript errors (and not crash when JS error in event)
